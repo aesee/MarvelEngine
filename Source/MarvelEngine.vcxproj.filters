@@ -27,6 +27,9 @@
     <ClInclude Include="MarvelEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\Actor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

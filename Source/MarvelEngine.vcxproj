@@ -175,6 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Components\Actor.h" />
     <ClInclude Include="MarvelEngine.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
