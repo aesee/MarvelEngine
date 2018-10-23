@@ -1,0 +1,8 @@
+Source/.vs/
+gamecode4/
+Lib/
+Lib/*.lib
+Lib/*.pdb
+Lib/*.pch
+Game/
+Source/3rdParty

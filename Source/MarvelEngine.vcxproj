@@ -72,6 +72,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib</LibraryPath>
+    <LibraryWPath>$(WindowsSDK_MetadataPath);$(SolutionDir)..\..\Lib;($DXSDK_DIR)\Include</LibraryWPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_SourcePath)\3rdParty</IncludePath>
+    <OutDir>..\Game\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -90,11 +94,32 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <ObjectFileName>..\Game\$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>..\Game\$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>..\Game\$(IntDir)</XMLDocumentationFileName>
+      <AssemblerListingLocation>..\Game\$(IntDir)</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>..\Game\$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <BrowseInformationFile>..\Game\$(IntDir)</BrowseInformationFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);Lib\</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ManifestFile>..\Game\$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
+    <BuildLog>
+      <Path>..\Game\$(IntDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <ResourceCompile>
+      <ResourceOutputFileName>..\Game\$(IntDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
+    <Manifest>
+      <OutputManifestFile>..\Game\$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>..\Game\$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
