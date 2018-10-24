@@ -1,6 +1,6 @@
 #pragma once
 
-#define ActorId int
+typedef unsigned long ActorId;
 
 struct Vec3
 {
