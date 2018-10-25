@@ -72,25 +72,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib;$(SolutionDir)..\..\Lib\Win32Debug;$(DXSDK_DIR)LIB\x86</LibraryPath>
-    <LibraryWPath>$(WindowsSDK_MetadataPath);$(SolutionDir)..\..\Lib;($DXSDK_DIR)\Include</LibraryWPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\</LibraryPath>
+    <LibraryWPath>$(WindowsSDK_MetadataPath);($DXSDK_DIR)\Include</LibraryWPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <OutDir>..\Game\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib;..\Lib\</LibraryPath>
     <OutDir>..\Game\$(Configuration)\</OutDir>
     <IntDir>..\Game\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\Game\$(Configuration)\</OutDir>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib;$(SolutionDir)..\..\Lib\Win32Debug;$(DXSDK_DIR)LIB\x86</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib;$(SolutionDir)..\..\Lib\Win32Debug;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\Game\$(Configuration)\</OutDir>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,6 +115,7 @@
       <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);..\Lib\;..\Lib\Win32Debug</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ManifestFile>..\Game\$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <BuildLog>
       <Path>..\Game\$(IntDir)$(MSBuildProjectName).log</Path>
