@@ -1,5 +1,8 @@
 #pragma once
 
+#define Model int
+#define Texture int
+
 typedef unsigned long ActorId;
 
 struct Vec3

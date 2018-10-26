@@ -1,4 +1,4 @@
-// Just stubs for now
+#pragma once
 #include "../Utilities.h"
 
 class Actor
