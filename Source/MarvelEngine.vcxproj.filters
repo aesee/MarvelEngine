@@ -27,13 +27,19 @@
     <ClInclude Include="MarvelEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Actor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameCodeApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\Actor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\RenderableActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\ActorFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

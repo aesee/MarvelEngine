@@ -188,7 +188,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Components\Actor.h" />
+    <ClInclude Include="Actors\Actor.h" />
+    <ClInclude Include="Actors\ActorFactory.h" />
+    <ClInclude Include="Actors\RenderableActor.h" />
     <ClInclude Include="GameCodeApp.h" />
     <ClInclude Include="MarvelEngine.h" />
     <ClInclude Include="Resource.h" />
