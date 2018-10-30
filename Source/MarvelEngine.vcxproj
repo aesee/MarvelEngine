@@ -72,29 +72,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\;$(VC_SourcePath)\..\Lib</LibraryPath>
     <LibraryWPath>$(WindowsSDK_MetadataPath);($DXSDK_DIR)\Include</LibraryWPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include;$(VC_SourcePath)\3rdParty\GLFW;$(VC_SourcePath)\3rdParty\GL</IncludePath>
     <OutDir>..\Game\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib;..\Lib\</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib;..\Lib\;$(VC_SourcePath)\..\Lib</LibraryPath>
     <OutDir>..\Game\$(Configuration)\</OutDir>
     <IntDir>..\Game\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include;$(VC_SourcePath)\3rdParty\GLFW;$(VC_SourcePath)\3rdParty\GL</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\Game\$(Configuration)\</OutDir>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib;$(SolutionDir)..\..\Lib\Win32Debug;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\..\Lib;$(SolutionDir)..\..\Lib\Win32Debug;$(DXSDK_DIR)LIB\x86;..\Lib;..\Lib\;$(VC_SourcePath)\..\Lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include;$(VC_SourcePath)\3rdParty\GLFW;$(VC_SourcePath)\3rdParty\GL</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\Game\$(Configuration)\</OutDir>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib\</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;..\Lib;..\Lib\;$(VC_SourcePath)\..\Lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DXSDK_DIR)\Include;$(VC_SourcePath)\3rdParty\GLFW;$(VC_SourcePath)\3rdParty\GL</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -115,7 +115,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);..\Lib\;..\Lib\Win32Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);..\Lib\;..\Lib\Win32Debug;..\Lib</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ManifestFile>..\Game\$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -146,6 +146,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>;..\Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -165,7 +166,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);..\Lib\;..\Lib\Win32Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Programs\git\MarvelEngine\Lib;$(SolutionDir)..\..\Lib;%(AdditionalLibraryDirectories);..\Lib\;..\Lib\Win32Debug;..\Lib</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>..\Game\$(IntDir)$(MSBuildProjectName).log</Path>
@@ -188,6 +189,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>;..\Lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -218,14 +220,6 @@
   <ItemGroup>
     <Image Include="MarvelEngine.ico" />
     <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="3rdParty\DXUT\Core\DXUT_2017_Win10.vcxproj">
-      <Project>{85344b7f-5aa0-4e12-a065-d1333d11f6ca}</Project>
-    </ProjectReference>
-    <ProjectReference Include="3rdParty\DXUT\Optional\DXUTOpt_2017_Win10.vcxproj">
-      <Project>{61b333c2-c4f7-4cc1-a9bf-83f6d95588eb}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
