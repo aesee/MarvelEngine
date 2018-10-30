@@ -43,5 +43,17 @@ int main()
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 
+	// Game Loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// Check input
+		glfwPollEvents();
+		// Swap buffer and display content
+		glfwSwapBuffers(window);
+	}
+	
+	// Clear resources before end
+	glfwTerminate();
+
 	return 0;
 }
