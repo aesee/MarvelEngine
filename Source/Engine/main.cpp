@@ -7,6 +7,10 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <iterator>
+#include <vector>
 
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
@@ -16,6 +20,32 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
+}
+
+/*std::string readFile(const char *filePath) {
+	std::string content;
+	std::ifstream fileStream(filePath, std::ios::in);
+
+	if (!fileStream.is_open()) {
+		std::cerr << "Could not read file " << filePath << ". File does not exist." << std::endl;
+		return "";
+	}
+
+	std::string line = "";
+	while (!fileStream.eof()) {
+		std::getline(fileStream, line);
+		content.append(line + "\n");
+	}
+
+	fileStream.close();
+	return content;
+}*/
+std::string readFile(const char* filepath) 
+{ 
+	std::ifstream myFile(filepath); 
+	std::string content((std::istreambuf_iterator<char>(myFile)), std::istreambuf_iterator<char>());
+
+	return content; 
 }
 
 int main()
@@ -59,8 +89,12 @@ int main()
 
 
 	
-	
-	
+
+	// Check how many shader vertexes we can process
+	GLint nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+		
 	// Giant shaders config code
 	/*GLfloat vertices[] = {								// Simple triangle
 		-0.5f, -0.5f, 0.0f,
@@ -79,10 +113,8 @@ int main()
 		1, 2, 3    // Second triangle
 	};
 
-	GLuint EBO;											// Create element buffer
-	glGenBuffers(1, &EBO);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);			// And bind it
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	GLuint IBO;											// Create index buffer
+	glGenBuffers(1, &IBO);
 	
 	GLuint VBO;											// Create vertex buffer object
 	glGenBuffers(1, &VBO);
@@ -90,7 +122,7 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	// Copy vertices to buffer; the data won't change
 
 	// Simple vertex shader
-	std::string vShader = "#version 330 core\nlayout (location = 0) in vec3 position;\nvoid main()\n{\ngl_Position = vec4(position.x, position.y, position.z, 1.0);\n}"; // read a string with the file contents
+	std::string vShader = readFile("shaders\\shader.vert");
 	GLchar const* vertexShaderSource = vShader.c_str();
 
 	// Create vertex shader
@@ -100,7 +132,7 @@ int main()
 	glCompileShader(vertexShader);
 
 	// Simple fragment shader
-	std::string fShader = "#version 330 core\nout vec4 color;\nvoid main()\n{\ncolor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n}";
+	std::string fShader = readFile("shaders\\shader.frag");
 	GLchar const* fragmentShaderSource = fShader.c_str();
 
 	// Create fragment shader
@@ -138,11 +170,6 @@ int main()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	// Interpret vertex data
-	// layout (location = 0), vec3, float points, don't need to normalize, step in 3 (x,y,z), offset 0
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
 	// Create vertex array
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -150,15 +177,20 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// Copy vertex buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);	// Copy indices of element
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);	// Copy indices of element
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+	// Interpret vertex data
+	// layout (location = 0), vec3, float points, don't need to normalize, step in 3 (x,y,z), offset 0
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	// Set pointers on vertex attributes
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);	// Unconnect array
 
 	// Draw only wireframe
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// Draw all
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
@@ -176,8 +208,7 @@ int main()
 		//glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
-
+		
 		// Swap buffer; we use a double buffering
 		glfwSwapBuffers(window);
 	}
