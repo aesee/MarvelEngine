@@ -62,12 +62,28 @@ int main()
 	
 	
 	// Giant shaders config code
-	GLfloat vertices[] = {								// Simple triangle
+	/*GLfloat vertices[] = {								// Simple triangle
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
 		0.0f,  0.5f, 0.0f
+	};*/
+
+	GLfloat vertices[] = {								// Simple rectangle
+	 0.5f,  0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f 
+	};
+	GLuint indices[] = {
+		0, 1, 3,   // First triangle
+		1, 2, 3    // Second triangle
 	};
 
+	GLuint EBO;											// Create element buffer
+	glGenBuffers(1, &EBO);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);			// And bind it
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	
 	GLuint VBO;											// Create vertex buffer object
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);					// Bind vbo to our buffer
@@ -118,9 +134,6 @@ int main()
 		std::cout << "ERROR::SHADER_PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	// Using shader program
-	glUseProgram(shaderProgram);
-
 	// Remove shaders that don't need anymore
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -136,11 +149,16 @@ int main()
 	glBindVertexArray(VAO);	// Bind array
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// Copy vertex buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);	// Copy indices of element
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	// Set pointers on vertex attributes
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);	// Unconnect array
 
-
+	// Draw only wireframe
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
@@ -153,10 +171,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw frame
-		glUseProgram(shaderProgram);
+		glUseProgram(shaderProgram);		// Using shader program
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
+		//glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+
 
 		// Swap buffer; we use a double buffering
 		glfwSwapBuffers(window);
