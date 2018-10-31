@@ -7,6 +7,16 @@
 
 #include <iostream>
 
+// GLFW callback
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
+{
+	// Close the window once escape is pressed
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+}
+
 int main()
 {
 	// Init GLFW
@@ -43,12 +53,21 @@ int main()
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 
+	// Set condition of closing window by escape button
+	glfwSetKeyCallback(window, key_callback);
+
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Check input
 		glfwPollEvents();
-		// Swap buffer and display content
+
+		// Draw a frame
+		// Clear screen
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Swap buffer; we use a double buffering
 		glfwSwapBuffers(window);
 	}
 	
