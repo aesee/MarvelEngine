@@ -22,24 +22,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	}
 }
 
-/*std::string readFile(const char *filePath) {
-	std::string content;
-	std::ifstream fileStream(filePath, std::ios::in);
-
-	if (!fileStream.is_open()) {
-		std::cerr << "Could not read file " << filePath << ". File does not exist." << std::endl;
-		return "";
-	}
-
-	std::string line = "";
-	while (!fileStream.eof()) {
-		std::getline(fileStream, line);
-		content.append(line + "\n");
-	}
-
-	fileStream.close();
-	return content;
-}*/
 std::string readFile(const char* filepath) 
 { 
 	std::ifstream myFile(filepath); 
@@ -96,13 +78,14 @@ int main()
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 		
 	// Giant shaders config code
-	/*GLfloat vertices[] = {								// Simple triangle
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f,  0.5f, 0.0f
-	};*/
+	GLfloat vertices[] = {
+		// Positions         // Colors
+		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f 
+	};
 
-	GLfloat vertices[] = {								// Simple rectangle
+	/*GLfloat vertices[] = {								// Simple rectangle
 	 0.5f,  0.5f, 0.0f,
 	 0.5f, -0.5f, 0.0f,
 	-0.5f, -0.5f, 0.0f,
@@ -111,7 +94,7 @@ int main()
 	GLuint indices[] = {
 		0, 1, 3,   // First triangle
 		1, 2, 3    // Second triangle
-	};
+	};*/
 
 	GLuint IBO;											// Create index buffer
 	glGenBuffers(1, &IBO);
@@ -178,12 +161,18 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);	// Copy indices of element
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Interpret vertex data
 	// layout (location = 0), vec3, float points, don't need to normalize, step in 3 (x,y,z), offset 0
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	// Set pointers on vertex attributes
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	// Set pointers on vertex attributes
+	//glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
 	glBindVertexArray(0);	// Unconnect array
 
 	// Draw only wireframe
@@ -204,9 +193,15 @@ int main()
 
 		// Draw frame
 		glUseProgram(shaderProgram);		// Using shader program
+		// Update uniform color in shaders
+		GLfloat timeValue = (GLfloat) glfwGetTime();
+		GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
+		GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "newColor");
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		// Draw object
 		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		
 		// Swap buffer; we use a double buffering
