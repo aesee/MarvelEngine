@@ -24,7 +24,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	}
 }
 
-int main()
+GLFWwindow* WindowInit()
 {
 	// Init GLFW
 	glfwInit();
@@ -44,7 +44,8 @@ int main()
 	{
 		std::cout << "Failed to create a window" << std::endl;
 		glfwTerminate();
-		return -1;
+		//return -1;
+		throw std::string("Failed to create a window");
 	}
 	glfwMakeContextCurrent(window);
 
@@ -53,7 +54,8 @@ int main()
 	if (glewInit() != GLEW_OK)
 	{
 		std::cout << "Failed to initialize GLEW" << std::endl;
-		return -1;
+		//return -1;
+		throw std::string("Failed to initialize GLEW");
 	}
 
 	// Set viewport
@@ -63,8 +65,12 @@ int main()
 	// Set condition of closing window by escape button
 	glfwSetKeyCallback(window, key_callback);
 
+	return window;
+}
 
-	
+int main()
+{
+	GLFWwindow* window = WindowInit();
 
 	// Check how many shader vertexes we can process
 	GLint nrAttributes;
@@ -100,55 +106,6 @@ int main()
 
 	Shader generalShader("shaders\\shader.vert", "shaders\\shader.frag");
 
-	/*// Simple vertex shader
-	std::string vShader = readFile("shaders\\shader.vert");
-	GLchar const* vertexShaderSource = vShader.c_str();
-
-	// Create vertex shader
-	GLuint vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	// Simple fragment shader
-	std::string fShader = readFile("shaders\\shader.frag");
-	GLchar const* fragmentShaderSource = fShader.c_str();
-
-	// Create fragment shader
-	GLuint fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	// Test result of shader's building is success
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Create shader program
-	GLuint shaderProgram;
-	shaderProgram = glCreateProgram();
-	// Attach shader to the program
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// Check there's no error
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER_PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Remove shaders that don't need anymore
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);*/
-
 	// Create vertex array
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
@@ -168,14 +125,7 @@ int main()
 	// Color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);	// Unconnect array
-
-	// Draw only wireframe
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// Draw all
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBindVertexArray(0);	// Disconnect array
 
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
