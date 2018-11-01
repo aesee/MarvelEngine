@@ -1,7 +1,5 @@
 #pragma once
-
-#include <fstream>
-#include <iterator>
+#include "stdafx.h"
 
 std::string readFile(const char* filepath)
 {

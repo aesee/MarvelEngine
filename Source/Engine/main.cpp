@@ -1,17 +1,4 @@
-// GLEW
-//#define GLEW_STATIC
-#pragma comment (lib, "glew32.lib")	// Have problem with static library so I use dynamic
-#include "..\3rdParty\GL\glew.h"
-// GLFW
-#include "..\3rdParty\GLFW\glfw3.h"
-
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iterator>
-#include <vector>
-
+#include "stdafx.h"
 #include "Shader.h"
 
 // GLFW callback
@@ -24,7 +11,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	}
 }
 
-GLFWwindow* WindowInit()
+GLFWwindow* WindowInit(int width, int height)
 {
 	// Init GLFW
 	glfwInit();
@@ -37,12 +24,10 @@ GLFWwindow* WindowInit()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a window
-	int width = 800;
-	int height = 600;
 	GLFWwindow* window = glfwCreateWindow(width, height, "Marvel Engine", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		std::cout << "Failed to create a window" << std::endl;
+		//std::cout << "Failed to create a window" << std::endl;
 		glfwTerminate();
 		//return -1;
 		throw std::string("Failed to create a window");
@@ -53,7 +38,7 @@ GLFWwindow* WindowInit()
 	glewExperimental = GL_TRUE;	// Using an experimental features
 	if (glewInit() != GLEW_OK)
 	{
-		std::cout << "Failed to initialize GLEW" << std::endl;
+		//std::cout << "Failed to initialize GLEW" << std::endl;
 		//return -1;
 		throw std::string("Failed to initialize GLEW");
 	}
@@ -70,7 +55,7 @@ GLFWwindow* WindowInit()
 
 int main()
 {
-	GLFWwindow* window = WindowInit();
+	GLFWwindow* window = WindowInit(800, 600);
 
 	// Check how many shader vertexes we can process
 	GLint nrAttributes;
