@@ -12,6 +12,8 @@
 #include <iterator>
 #include <vector>
 
+#include "Shader.h"
+
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
 {
@@ -20,14 +22,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-}
-
-std::string readFile(const char* filepath) 
-{ 
-	std::ifstream myFile(filepath); 
-	std::string content((std::istreambuf_iterator<char>(myFile)), std::istreambuf_iterator<char>());
-
-	return content; 
 }
 
 int main()
@@ -104,7 +98,9 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);					// Bind vbo to our buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	// Copy vertices to buffer; the data won't change
 
-	// Simple vertex shader
+	Shader generalShader("shaders\\shader.vert", "shaders\\shader.frag");
+
+	/*// Simple vertex shader
 	std::string vShader = readFile("shaders\\shader.vert");
 	GLchar const* vertexShaderSource = vShader.c_str();
 
@@ -151,7 +147,7 @@ int main()
 
 	// Remove shaders that don't need anymore
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	glDeleteShader(fragmentShader);*/
 
 	// Create vertex array
 	GLuint VAO;
@@ -192,12 +188,13 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw frame
-		glUseProgram(shaderProgram);		// Using shader program
+		generalShader.Use();				// Using shader program
 		// Update uniform color in shaders
 		GLfloat timeValue = (GLfloat) glfwGetTime();
 		GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
-		GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "newColor");
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(generalShader.Program, "newColor"), 1.0f);
+		//GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "newColor");
+		//glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		// Draw object
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
