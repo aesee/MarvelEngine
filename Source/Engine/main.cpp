@@ -63,23 +63,24 @@ int main()
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 		
 	// Giant shaders config code
-	GLfloat vertices[] = {
+	/*GLfloat vertices[] = {
 		// Positions         // Colors
 		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
 		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
 		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f 
-	};
+	};*/
 
-	/*GLfloat vertices[] = {								// Simple rectangle
-	 0.5f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f 
+	GLfloat vertices[] = {
+		// Positions          // Colors           // Texture coordinates
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f 
 	};
 	GLuint indices[] = {
 		0, 1, 3,   // First triangle
 		1, 2, 3    // Second triangle
-	};*/
+	};
 
 	GLuint IBO;											// Create index buffer
 	glGenBuffers(1, &IBO);
@@ -99,18 +100,36 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);	// Copy indices of element
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Interpret vertex data
 	// layout (location = 0), vec3, float points, don't need to normalize, step in 3 (x,y,z), offset 0
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	// Set pointers on vertex attributes
-	//glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	// Color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
+	// Texture attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);	// Disconnect array
+
+	// Generate texture for OpenGL
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// Load texture
+	int width, height;
+	unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	// Attach loaded image and generate mipmap
+	// GLBorder always need to be zero
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	// Free memory
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
@@ -123,17 +142,25 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Draw frame
+		//glUniform1f(glGetUniformLocation(generalShader.Program, "offset"), 0.5f);
 		generalShader.Use();				// Using shader program
 		// Update uniform color in shaders
-		GLfloat timeValue = (GLfloat) glfwGetTime();
-		GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
-		glUniform1f(glGetUniformLocation(generalShader.Program, "newColor"), 1.0f);
+		//GLfloat timeValue = (GLfloat) glfwGetTime();
+		//GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
+
+
+
+		//glUniform1f(glGetUniformLocation(generalShader.Program, "newColor"), 1.0f);
 		//GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "newColor");
 		//glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		// Draw object
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
+		//glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);	// OpenGl function that draw an object
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		
 		// Swap buffer; we use a double buffering

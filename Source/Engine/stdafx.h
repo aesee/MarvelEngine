@@ -6,6 +6,9 @@
 #include "..\3rdParty\GL\glew.h"
 // GLFW
 #include "..\3rdParty\GLFW\glfw3.h"
+// Simple OpenGL Image Loader
+#pragma comment (lib, "SOIL.lib")
+#include "..\3rdParty\SOIL\SOIL.h"
 
 #include <iostream>
 #include <string>
