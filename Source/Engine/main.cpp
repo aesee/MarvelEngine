@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Shader.h"
 
+int screenWidth = 800;
+int screenHeight = 600;
+
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
 {
@@ -55,7 +58,7 @@ GLFWwindow* WindowInit(int width, int height)
 
 int main()
 {
-	GLFWwindow* window = WindowInit(800, 600);
+	GLFWwindow* window = WindowInit(screenWidth, screenHeight);
 
 	// Check how many shader vertexes we can process
 	GLint nrAttributes;
@@ -158,13 +161,27 @@ int main()
 		//GLfloat timeValue = (GLfloat) glfwGetTime();
 		//GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
 
-		// Some experiment with matrixes
+		// Some experiment with matrices
 		glm::mat4 trans;
 		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 		trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0, 0.0, 1.0));
 		//trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-		GLuint transformLoc = glGetUniformLocation(generalShader.Program, "transform");
-		glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(trans));
+
+		// Rotate object on 55 degree around OX
+		glm::mat4 model;
+		model = glm::rotate(model, -80.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 view;
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		glm::mat4 projection;
+		projection = glm::perspective(45.0f, (float) screenWidth / screenHeight, 0.1f, 100.0f);
+		// Translate them to shader
+		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "model"), 1, false, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, glm::value_ptr(projection));
+
+
+		//GLuint transformLoc = glGetUniformLocation(generalShader.Program, "transform");
+		//glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(trans));
 		//glUniform1f(glGetUniformLocation(generalShader.Program, "newColor"), 1.0f);
 		//GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "newColor");
 		//glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
