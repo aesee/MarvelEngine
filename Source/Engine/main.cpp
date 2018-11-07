@@ -141,11 +141,6 @@ int main()
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Some experiment with matrixes
-	glm::mat4 trans;
-	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -163,7 +158,11 @@ int main()
 		//GLfloat timeValue = (GLfloat) glfwGetTime();
 		//GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
 
-
+		// Some experiment with matrixes
+		glm::mat4 trans;
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0, 0.0, 1.0));
+		//trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 		GLuint transformLoc = glGetUniformLocation(generalShader.Program, "transform");
 		glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(trans));
 		//glUniform1f(glGetUniformLocation(generalShader.Program, "newColor"), 1.0f);
