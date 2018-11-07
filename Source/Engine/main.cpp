@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Shader.h"
 
-int screenWidth = 800;
-int screenHeight = 600;
+int screenWidth = 1280;
+int screenHeight = 720;
 bool keys[1024];
 
 // GLFW callback
@@ -218,15 +218,7 @@ int main()
 	};
 
 	// Camera
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::mat4 view;
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	Camera* camera = new Camera(screenWidth, screenHeight);
 
 
 	// Game Loop
@@ -239,16 +231,8 @@ int main()
 
 		// Check input
 		glfwPollEvents();
-		// Camera controls
-		GLfloat cameraSpeed = 5.0f * deltaTime;
-		if (keys[GLFW_KEY_W])
-			cameraPos += cameraSpeed * cameraFront;
-		if (keys[GLFW_KEY_S])
-			cameraPos -= cameraSpeed * cameraFront;
-		if (keys[GLFW_KEY_A])
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		if (keys[GLFW_KEY_D])
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		// Camera control
+		camera->Control(deltaTime, keys);
 		
 		// Clear screen
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -261,18 +245,9 @@ int main()
 		//GLfloat timeValue = (GLfloat) glfwGetTime();
 		//GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
 
-		// Some experiment with matrices
-		glm::mat4 projection;
-		projection = glm::perspective(45.0f, (float) screenWidth / screenHeight, 0.1f, 100.0f);
-		// Camera rotation
-		/*GLfloat radius = 10.0f;
-		GLfloat camX = sin(glfwGetTime()) * radius;
-		GLfloat camZ = cos(glfwGetTime()) * radius;
-		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), cameraTarget, up);*/
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		// Translate to shader
-		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, camera->GetView());
+		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, camera->GetProjection());
 
 
 		//GLuint transformLoc = glGetUniformLocation(generalShader.Program, "transform");
