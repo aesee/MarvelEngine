@@ -206,6 +206,16 @@ int main()
 		  glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
+	// Camera
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+	glm::mat4 view;
+	view = glm::lookAt(cameraPos, cameraTarget, up);
+
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -224,21 +234,14 @@ int main()
 		//GLfloat greenValue = (GLfloat) (sin(timeValue) / 2) + 0.5;
 
 		// Some experiment with matrices
-		glm::mat4 trans;
-		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-		trans = glm::rotate(trans, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.0, 0.0, 1.0));
-		//trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-
-		// Rotate object
-		//glm::mat4 model;
-		//model = glm::rotate(model, -80.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, (GLfloat)glfwGetTime() * 50.0f, glm::vec3(0.5f, 1.0f, 0.0f));
-		glm::mat4 view;
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		glm::mat4 projection;
 		projection = glm::perspective(45.0f, (float) screenWidth / screenHeight, 0.1f, 100.0f);
-		// Translate them to shader
-		//glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "model"), 1, false, glm::value_ptr(model));
+		// Camera rotation
+		GLfloat radius = 10.0f;
+		GLfloat camX = sin(glfwGetTime()) * radius;
+		GLfloat camZ = cos(glfwGetTime()) * radius;
+		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), cameraTarget, up);
+		// Translate to shader
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, glm::value_ptr(projection));
 
