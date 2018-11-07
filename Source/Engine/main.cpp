@@ -3,6 +3,7 @@
 
 int screenWidth = 800;
 int screenHeight = 600;
+bool keys[1024];
 
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
@@ -12,6 +13,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
+
+	// Camera control
+	if (action == GLFW_PRESS)
+		keys[key] = true;
+	else if (action == GLFW_RELEASE)
+		keys[key] = false;
 }
 
 GLFWwindow* WindowInit(int width, int height)
@@ -192,6 +199,10 @@ int main()
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	// Time counter
+	GLfloat deltaTime = 0.0f;
+	GLfloat lastFrame = 0.0f;
+
 	// Positions for drawing a 10 cubes
 	glm::vec3 cubePositions[] = {
 		  glm::vec3(0.0f,  0.0f,  0.0f),
@@ -213,15 +224,32 @@ int main()
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::mat4 view;
-	view = glm::lookAt(cameraPos, cameraTarget, up);
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 
 	// Game Loop
 	while (!glfwWindowShouldClose(window))
 	{
+		// Calculate delta time
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// Check input
 		glfwPollEvents();
-
+		// Camera controls
+		GLfloat cameraSpeed = 5.0f * deltaTime;
+		if (keys[GLFW_KEY_W])
+			cameraPos += cameraSpeed * cameraFront;
+		if (keys[GLFW_KEY_S])
+			cameraPos -= cameraSpeed * cameraFront;
+		if (keys[GLFW_KEY_A])
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		if (keys[GLFW_KEY_D])
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		
 		// Clear screen
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -237,10 +265,11 @@ int main()
 		glm::mat4 projection;
 		projection = glm::perspective(45.0f, (float) screenWidth / screenHeight, 0.1f, 100.0f);
 		// Camera rotation
-		GLfloat radius = 10.0f;
+		/*GLfloat radius = 10.0f;
 		GLfloat camX = sin(glfwGetTime()) * radius;
 		GLfloat camZ = cos(glfwGetTime()) * radius;
-		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), cameraTarget, up);
+		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), cameraTarget, up);*/
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 		// Translate to shader
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, glm::value_ptr(projection));
