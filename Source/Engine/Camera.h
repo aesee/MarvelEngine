@@ -18,7 +18,7 @@ class Camera
 
 public:
 	Camera(int with, int height);
-	void Control(GLfloat deltaTime, bool keys[]);
+	void Control(GLfloat deltaTime, bool keys[], glm::vec3 _front);
 	const float * GetView();
 	const float * GetProjection();
 	~Camera();

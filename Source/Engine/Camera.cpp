@@ -16,7 +16,7 @@ Camera::Camera(int width, int height)
 	screenHeight = height;
 }
 
-void Camera::Control(GLfloat deltaTime, bool keys[])
+void Camera::Control(GLfloat deltaTime, bool keys[], glm::vec3 _front)
 {
 	GLfloat cameraSpeed = speed * deltaTime;
 	if (keys[GLFW_KEY_W])
@@ -27,6 +27,8 @@ void Camera::Control(GLfloat deltaTime, bool keys[])
 		position -= glm::normalize(glm::cross(front, up)) * cameraSpeed;
 	if (keys[GLFW_KEY_D])
 		position += glm::normalize(glm::cross(front, up)) * cameraSpeed;
+
+	front = glm::normalize(_front);
 }
 
 const float * Camera::GetView()

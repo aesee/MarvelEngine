@@ -4,6 +4,9 @@
 int screenWidth = 1280;
 int screenHeight = 720;
 bool keys[1024];
+GLfloat lastX, lastY;
+GLfloat yaw = -90.0f;
+GLfloat pitch = 0.0f;
 
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
@@ -19,6 +22,39 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int nod
 		keys[key] = true;
 	else if (action == GLFW_RELEASE)
 		keys[key] = false;
+}
+
+bool firstMouse = true;
+glm::vec3 mouse;
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	GLfloat xoffset = xpos - lastX;
+	GLfloat yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	GLfloat sensitivity = 0.05f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	mouse.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	mouse.y = sin(glm::radians(pitch));
+	mouse.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 }
 
 GLFWwindow* WindowInit(int width, int height)
@@ -62,6 +98,13 @@ GLFWwindow* WindowInit(int width, int height)
 
 	// Set condition of closing window by escape button
 	glfwSetKeyCallback(window, key_callback);
+
+	// Get mouse cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// Set mouse control
+	glfwSetCursorPosCallback(window, mouse_callback);
+	lastX = screenWidth / 2; lastY = screenHeight / 2;
 
 	return window;
 }
@@ -232,7 +275,7 @@ int main()
 		// Check input
 		glfwPollEvents();
 		// Camera control
-		camera->Control(deltaTime, keys);
+		camera->Control(deltaTime, keys, mouse);
 		
 		// Clear screen
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
