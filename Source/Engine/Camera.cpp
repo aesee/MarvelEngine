@@ -29,6 +29,9 @@ void Camera::Control(GLfloat deltaTime, bool keys[], glm::vec3 _front)
 		position += glm::normalize(glm::cross(front, up)) * cameraSpeed;
 
 	front = glm::normalize(_front);
+
+	// Log of mouse movement
+	std::cout << front.x << front.y << front.z << std::endl;
 }
 
 const float * Camera::GetView()

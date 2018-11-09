@@ -89,8 +89,6 @@ GLFWwindow* WindowInit(int width, int height)
 	glewExperimental = GL_TRUE;	// Using an experimental features
 	if (glewInit() != GLEW_OK)
 	{
-		//std::cout << "Failed to initialize GLEW" << std::endl;
-		//return -1;
 		throw std::string("Failed to initialize GLEW");
 	}
 
@@ -132,7 +130,7 @@ int main()
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);					// Bind vbo to our buffer
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	// Copy vertices to buffer; the data won't change
 
-	Shader generalShader("shaders\\shader.vert", "shaders\\shader.frag");
+	//Shader generalShader("shaders\\shader.vert", "shaders\\shader.frag");
 
 	// Create vertex array
 	GLuint VAO;
@@ -197,25 +195,16 @@ int main()
 		
 		// Draw frame
 		// Translate to shader
-		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, camera->GetView());
-		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, camera->GetProjection());
-		
-		glUniform1i(glGetUniformLocation(generalShader.Program, "ourTexture1"), 1);
-		glUniform1i(glGetUniformLocation(generalShader.Program, "ourTexture2"), 0);
-		
-		// Draw object
+		cube->UseShader(camera);
 		glBindVertexArray(VAO);
 		GLuint count = sizeof(cubePositions) / (cubePositions->length() * sizeof(float));
 		for (GLuint i = 0; i < count; i++)
 		{
-			glm::mat4 model;
-			model = glm::translate(model, cubePositions[i]);
-			GLfloat angle = 20.0f * i;
-			model = glm::rotate(model, angle + (GLfloat)glfwGetTime() * 50.0f, glm::vec3(1.0f, 0.3f, 0.5f));
-			glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
+			cube->SetLocation(cubePositions[i]);
 			cube->Draw();
 		}
+		//cube->SetLocation(glm::vec3(0,0,0));
+		//cube->Draw();
 		glBindVertexArray(0);
 
 		// Swap buffer; we use a double buffering

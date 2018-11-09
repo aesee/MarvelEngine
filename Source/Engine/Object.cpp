@@ -4,12 +4,14 @@
 
 Object::Object()
 {
+	//model = glm::vec4(glm::vec3(0.0f), 1.0f);
 }
 
 
 Object::~Object()
 {
 	delete obj;
+	delete shader;
 }
 
 Cube::Cube() : Object()
@@ -58,6 +60,8 @@ Cube::Cube() : Object()
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
+
+	shader = new Shader("shaders\\shader.vert", "shaders\\shader.frag");
 }
 
 Cube::~Cube()
