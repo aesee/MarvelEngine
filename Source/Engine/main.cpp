@@ -6,11 +6,11 @@
 int screenWidth = 1280;
 int screenHeight = 720;
 bool keys[1024];
-GLfloat lastX, lastY;
+GLfloat lastX = screenWidth / 2, lastY = screenHeight / 2;
 GLfloat yaw = -90.0f;
 GLfloat pitch = 0.0f;
 bool firstMouse = true;
-glm::vec3 mouse;
+glm::vec3 mouse = glm::vec3(0.0f, 0.0f, -1.0f);;
 
 // GLFW callback
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int node)
@@ -108,6 +108,11 @@ GLFWwindow* WindowInit(int width, int height)
 	glfwSetCursorPosCallback(window, mouse_callback);
 	lastX = width / 2; lastY = height / 2;
 
+	// Check how many shader vertices we can process
+	GLint nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+
 	return window;
 }
 
@@ -115,11 +120,6 @@ int main()
 {
 	GLFWwindow* window = WindowInit(screenWidth, screenHeight);
 	Camera* camera = new Camera(screenWidth, screenHeight);
-
-	// Check how many shader vertexes we can process
-	GLint nrAttributes;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 		
 	// Cube
 	Cube* cube = new Cube();
@@ -194,10 +194,8 @@ int main()
 		// Sky color
 		glClearColor(0.52f, 0.8f, 0.92f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
 		// Draw frame
-		generalShader.Use();				// Using shader program
-
 		// Translate to shader
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "view"), 1, false, camera->GetView());
 		glUniformMatrix4fv(glGetUniformLocation(generalShader.Program, "projection"), 1, false, camera->GetProjection());
