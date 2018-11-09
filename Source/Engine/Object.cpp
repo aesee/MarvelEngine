@@ -22,15 +22,63 @@ Object::Object(GLuint VBO)
 }
 
 
+void Object::LoadObjectIntoBuffer(GLuint nPoints)
+{
+	glBufferData(GL_ARRAY_BUFFER, nPoints * sizeof(GLfloat), obj, GL_STATIC_DRAW);
+}
+
 Object::~Object()
 {
 	delete obj;
 	delete shader;
 }
 
+void Object::Draw()
+{
+	glBindVertexArray(VAO);
+	glUniformMatrix4fv(glGetUniformLocation(shader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+	glDrawArrays(GL_TRIANGLES, 0, 36);	// Need to change count to variables !
+	glBindVertexArray(0);
+}
+
+void Object::LoadTexture(const char * name)
+{
+	glGenTextures(1, textures + currentTexture * sizeof(GLuint));
+	//glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+	// Load texture
+	int width, height;
+	unsigned char* image = SOIL_load_image(name, &width, &height, 0, SOIL_LOAD_RGB);
+	// Attach loaded image and generate mipmap
+	// GLBorder always need to be zero
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glActiveTexture(GL_TEXTURE0 + currentTexture);
+	glBindTexture(GL_TEXTURE_2D, textures[currentTexture]);
+
+	if (currentTexture < 9)
+	{
+		currentTexture += 1;
+	}
+
+	// Free memory
+	SOIL_free_image_data(image);
+}
+
+void Object::UseShader(Camera* camera)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shader->Program, "view"), 1, false, camera->GetView());
+	glUniformMatrix4fv(glGetUniformLocation(shader->Program, "projection"), 1, false, camera->GetProjection());
+}
+
+void Object::SetLocation(glm::vec3 location)
+{
+	model = glm::translate(glm::mat4(1.0f), location);
+}
+
 Cube::Cube(GLuint VBO) : Object(VBO)
 {
-	//nElements = 180;
+	GLuint nElements = 180;
 
 	obj = new GLfloat[nElements]{
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -75,12 +123,18 @@ Cube::Cube(GLuint VBO) : Object(VBO)
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
-	
-	glBufferData(GL_ARRAY_BUFFER, nElements * sizeof(GLfloat), obj, GL_STATIC_DRAW);
-	
 	shader = new Shader("shaders\\shader.vert", "shaders\\shader.frag");
+	
+	LoadObjectIntoBuffer(nElements);
 }
 
 Cube::~Cube()
 {
+}
+
+void Cube::UseShader(Camera* camera)
+{
+	Object::UseShader(camera);
+	glUniform1i(glGetUniformLocation(shader->Program, "ourTexture1"), 1);
+	glUniform1i(glGetUniformLocation(shader->Program, "ourTexture2"), 0);
 }

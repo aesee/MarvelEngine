@@ -122,14 +122,14 @@ int main()
 	GLuint VBO;											// Create vertex buffer object
 	glGenBuffers(1, &VBO);
 	
-	// Cube
+	// Make cube
 	Cube* cube = new Cube(VBO);
 
 	// Generate texture for OpenGL
 	cube->LoadTexture("container.jpg");
 	cube->LoadTexture("sample.jpg");
 
-	//glBindTexture(GL_TEXTURE_2D, 0);				// It's really needed???
+	//glBindTexture(GL_TEXTURE_2D, 0);				// Is it really need???
 
 	// Time counter
 	GLfloat deltaTime = 0.0f;

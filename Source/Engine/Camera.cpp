@@ -31,7 +31,7 @@ void Camera::Control(GLfloat deltaTime, bool keys[], glm::vec3 _front)
 	front = glm::normalize(_front);
 
 	// Log of mouse movement
-	std::cout << front.x << front.y << front.z << std::endl;
+	//std::cout << front.x << front.y << front.z << std::endl;
 }
 
 const float * Camera::GetView()
