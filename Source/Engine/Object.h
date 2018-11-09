@@ -6,21 +6,25 @@
 class Object
 {
 protected:
-	GLfloat * obj;
-	int nElements;
-	GLuint textures[10];
-	GLuint currentTexture = 0;
-	Shader* shader;
-	glm::mat4 model;
+	GLfloat * obj;	// coordinates
+	GLuint VAO;		// array buffer
+	const int nElements = 0;	// number of coordinates
+	GLuint textures[10];	// array of textures; i think 10 will be enough for now
+	GLuint currentTexture = 0;	// just indexer for LoadTexture method
+	Shader* shader;		// Shader for this object
+	glm::mat4 model;	// Model to translate, scale and rotate
+
+	Object(GLuint VBO);
 
 public:
-	Object();
 	virtual ~Object();
 
 	void Draw()
 	{
+		glBindVertexArray(VAO);
 		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);	// Need to change count to variables
+		glBindVertexArray(0);
 	}
 
 	void LoadTexture(const char * name)
@@ -47,10 +51,10 @@ public:
 		SOIL_free_image_data(image);
 	}
 
-	void AddIntoBuffer()
+	/*void AddIntoBuffer()
 	{
 		glBufferData(GL_ARRAY_BUFFER, nElements * sizeof(GLfloat), obj, GL_STATIC_DRAW);
-	}
+	}*/
 
 	void virtual UseShader(Camera* camera)
 	{
@@ -68,8 +72,10 @@ public:
 class Cube : public Object
 {
 public:
-	Cube();
+	Cube(GLuint VBO);
 	~Cube();
+
+	const int nElements = 180;
 
 	void UseShader(Camera* camera) override
 	{

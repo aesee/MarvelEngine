@@ -118,45 +118,18 @@ int main()
 {
 	GLFWwindow* window = WindowInit(screenWidth, screenHeight);
 	Camera* camera = new Camera(screenWidth, screenHeight);
-		
-	// Cube
-	Cube* cube = new Cube();
-
-	GLuint IBO;											// Create index buffer
-	glGenBuffers(1, &IBO);
 	
 	GLuint VBO;											// Create vertex buffer object
 	glGenBuffers(1, &VBO);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);					// Bind vbo to our buffer
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	// Copy vertices to buffer; the data won't change
-
-	//Shader generalShader("shaders\\shader.vert", "shaders\\shader.frag");
-
-	// Create vertex array
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);	// Bind array
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// Copy vertex buffer
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	cube->AddIntoBuffer();
-
-	// Interpret vertex data
-	// layout (location = 0), vec3, float points, don't need to normalize, step in 3 (x,y,z), offset 0
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	// Color attribute
-	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);*/
-	// Texture attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-	glBindVertexArray(0);	// Disconnect array
+	
+	// Cube
+	Cube* cube = new Cube(VBO);
 
 	// Generate texture for OpenGL
 	cube->LoadTexture("container.jpg");
 	cube->LoadTexture("sample.jpg");
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);				// It's really needed???
 
 	// Time counter
 	GLfloat deltaTime = 0.0f;
@@ -194,18 +167,15 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Draw frame
-		// Translate to shader
 		cube->UseShader(camera);
-		glBindVertexArray(VAO);
+
+		// Place cubes and draw
 		GLuint count = sizeof(cubePositions) / (cubePositions->length() * sizeof(float));
 		for (GLuint i = 0; i < count; i++)
 		{
 			cube->SetLocation(cubePositions[i]);
 			cube->Draw();
 		}
-		//cube->SetLocation(glm::vec3(0,0,0));
-		//cube->Draw();
-		glBindVertexArray(0);
 
 		// Swap buffer; we use a double buffering
 		glfwSwapBuffers(window);
