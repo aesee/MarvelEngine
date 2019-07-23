@@ -1,13 +1,11 @@
 # MarvelEngine
-The game engine
+The 3D game engine uses OpenGL.
+Development only for educational reasons.
 
-The project starts again from scratch. Now it uses an OpenGL instead of DirectX.
-Put glew32.dll in a folder with the bin.
+The project starts again from scratch.
 
-## Libraries
+## Build
 
-The project uses following libraries:
-* GLFW
-* OpenGL Extension Wrangler Library
-* Simple OpenGL Image Loader
-* OpenGL Mathematics
+For Linux generate a solution with a makefile.
+For Windows generate a solution with one of .bat-files in the directory.
+Make sure that you have CMake installed.

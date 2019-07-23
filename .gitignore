@@ -1,5 +1,7 @@
 Source/.vs/
-gamecode4/
+build/
+*.vcxproj
+*.vcxproj.filters
 Lib/
 Lib/*.lib
 Lib/*.pdb
